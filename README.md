@@ -7,7 +7,7 @@ Se aplica también un flujo profesional de Git con ramas `main` y `develop`.
 
 ---
 
-## 🚀 Objetivo del Reto
+##  Objetivo del Reto
 
 Construir una aplicación completa para manejar cócteles con:
 
@@ -32,7 +32,7 @@ Construir una aplicación completa para manejar cócteles con:
 
 ---
 
-## 📁 Estructura del Proyecto
+##  Estructura del Proyecto
 AppCocteles/
 │
 ├── server/ # Backend (Node.js + Express + PostgreSQL)
@@ -59,7 +59,7 @@ AppCocteles/
 
 ---
 
-# 🧑‍💻 Tecnologías Utilizadas
+#  Tecnologías Utilizadas
 
 ### Backend  
 - Node.js v18  
@@ -81,9 +81,9 @@ AppCocteles/
 
 ---
 
-# 🏗 Instalación y Ejecución
+#  Instalación y Ejecución
 
-## 📦 1. Clonar el repositorio
+##  1. Clonar el repositorio
 ```bash
 git clone https://github.com/Poli-devs/AppCocteles.git
 cd AppCocteles
