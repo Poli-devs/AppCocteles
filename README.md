@@ -1,4 +1,4 @@
-# 🍹 AppCocteles – Aplicación Fullstack de Gestión de Cócteles
+# AppCocteles – Aplicación Fullstack de Gestión de Cócteles
 
 Prueba técnica desarrollada para la vacante de **Desarrollador de Software**, siguiendo arquitectura cliente–servidor con **Node.js**, **Express**, **PostgreSQL** y **React**.
 
@@ -46,6 +46,8 @@ AppCocteles/
 │ │ └── index.js
 │ └── package.json
 │
+
+
 └── client/ # Frontend (React + TailwindCSS)
 ├── src/
 │ ├── pages/
