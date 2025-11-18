@@ -39,12 +39,14 @@ AppCocteles/
 ├── server/ # Backend (Node.js + Express + PostgreSQL)
 │ ├── src/
 │ │ ├── models/
+│ │ ├── middlewares/
 │ │ ├── controllers/
 │ │ ├── services/
 │ │ ├── routes/
 │ │ ├── database/
 │ │ ├── app.js
 │ │ └── index.js
+│ └── uploads
 │ └── package.json
 │
 
@@ -101,6 +103,9 @@ npm install
 #Ejecutar servidor
 npm run dev
 
+#o 
+node src/index.js
+
 #Frontend
 Entrar al frontend
 
@@ -113,11 +118,12 @@ npm install
 npm start
 
 #Endpoints Backend (pendiente de implementación)
-Método	Endpoint	Descripción
-GET	/api/cocktails	Listar cócteles
-GET	/api/cocktails/:id	Ver detalle
-POST	/api/cocktails	Crear cóctel
-PUT	/api/cocktails/:id	Editar cóctel
+Método	Endpoint	       Descripción
+GET	/api/cocktails	       Listar cócteles
+GET	/api/cocktails/:id	   Ver detalle
+POST /api/cocktails	       Crear cóctel
+PUT	/api/cocktails/:id	   Editar cóctel
+DELETE /api/cocktails/:id  Desactivar cóctel 'soft delete'
 
 #Flujo de Trabajo Git (GitFlow)
 Crear rama de desarrollo:
@@ -133,3 +139,16 @@ git push origin develop
 Luis Fernando
 Desarrollador de Software
 GitHub: https://github.com/Poli-devs
+
+#DATABASE :
+-- database.sql
+CREATE TABLE cocktails (
+    id_cocktail SERIAL PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    descripcion TEXT,
+    precio DECIMAL(10,2) NOT NULL,
+    imagen_url VARCHAR(255),
+    disponible BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);
