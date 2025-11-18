@@ -35,6 +35,7 @@ Construir una aplicación completa para manejar cócteles con:
 ##  Estructura del Proyecto
 AppCocteles/
 │
+
 ├── server/ # Backend (Node.js + Express + PostgreSQL)
 │ ├── src/
 │ │ ├── models/
