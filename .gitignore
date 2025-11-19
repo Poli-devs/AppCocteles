@@ -1,0 +1,37 @@
+# === GENERAL ===
+.DS_Store
+.env
+.env.local
+.env.development.local
+.env.production.local
+
+# === NODE ===
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# === LOGS ===
+logs
+*.log
+*.log.*
+log/
+
+# === SERVER (Node.js / Express) ===
+server/node_modules/
+server/dist/
+server/build/
+
+# === CLIENT (React) ===
+client/node_modules/
+client/build/
+client/.cache/
+client/dist/
+
+# === EDITOR ===
+.vscode/
+.idea/
+
+# === OS ===
+Thumbs.db
