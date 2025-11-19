@@ -1,34 +1,34 @@
 # AppCocteles – Aplicación Fullstack de Gestión de Cócteles
 
-Prueba técnica desarrollada para la vacante de **Desarrollador de Software**, siguiendo arquitectura cliente–servidor con **Node.js**, **Express**, **PostgreSQL** y **React**.
+Prueba técnica desarrollada para la vacante de **Desarrollador de Software**, siguiendo arquitectura cliente–servidor con **Node.js**, **Express**, **PostgreSQL** y **Next.js 16** (Frontend).
 
-Este proyecto incluye un backend con API REST y un frontend en React que consume dicha API.  
+Este proyecto incluye un backend con API REST y un frontend moderno en Next.js con TailwindCSS.  
 Se aplica también un flujo profesional de Git con ramas `main` y `develop`.
 
 ---
 
-##  Objetivo del Reto
+## 🎯 Objetivo del Proyecto
 
-Construir una aplicación completa para manejar cócteles con:
+Construir una aplicación completa para manejar cócteles, incluyendo:
 
-### **Backend (Node.js 18 + Express)**
-- API para listar cócteles (con fotos)  
-- Endpoint para ver detalle de un cóctel  
-- Endpoint para agregar nuevos cócteles  
-- Endpoint para editar un cóctel  
-- Scripts SQL si se utiliza base de datos (PostgreSQL)  
-- Arquitectura profesional separada en capas (`models`, `services`, `controllers`, `routes`, `database`)
+### **Backend (Node.js 18 + Express + PostgreSQL)**  
+- Endpoint para listar cócteles  
+- Endpoint para ver detalle  
+- Endpoint para crear un cóctel  
+- Endpoint para editar  
+- Endpoint para eliminar (soft delete)  
+- Manejo de imágenes con carpeta `/uploads`  
+- Arquitectura limpia (`controllers`, `services`, `models`, `routes`)  
 
----
-
-### **Frontend (React + TailwindCSS)**
-- Pantalla de lista de cócteles  
-- Buscador de cócteles  
-- Pantalla de detalle  
-- Formulario para agregar un cóctel  
-- Formulario para editar un cóctel  
-- Manejo de favoritos con `localStorage`  
-- Consumo de la API desarrollada en Node.js  
+### **Frontend (Next.js 16 + TailwindCSS)**  
+- Pantalla para listar cócteles  
+- Buscador  
+- Vista de detalle  
+- Formulario para agregar cócteles  
+- Formulario para editar  
+- Favoritos usando `localStorage`  
+- Consumo de la API del backend  
+- Renderizado dinámico con rutas tipo `/cocktails/[id]`  
 
 ---
 
@@ -50,18 +50,26 @@ AppCocteles/
 │ └── package.json
 │
 
-
-└── client/ # Frontend (React + TailwindCSS)
-├── src/
-│ ├── pages/
-│ ├── components/
-│ ├── api/
-│ ├── routes/
-│ ├── App.js
-│ └── index.js
-└── package.json
-
-
+└── client/                # Frontend Next.js + TailwindCSS
+  ├── app/
+  │ ├── layout.js
+  │ ├── page.jsx
+  │ ├── cocktails/
+  │ │ ├── page.jsx
+  │ │ └── [id]/page.jsx
+  │ ├── favoritos/page.jsx
+  │ └── agregar/page.jsx
+  ├── components/
+  │ ├── Navbar.jsx
+  │ ├── CocktailCard.jsx
+  │ └── SearchBar.jsx
+  ├── lib/
+  │ └── api.js
+  ├── public/
+  │ └── placeholder.jpg
+  ├── tailwind.config.js
+  ├── package.json
+  └── .env.local
 ---
 
 #  Tecnologías Utilizadas
@@ -70,14 +78,17 @@ AppCocteles/
 - Node.js v18  
 - Express.js  
 - PostgreSQL  
+- Sequelize ORM  
+- Multer (para imágenes) 
 - pg o Sequelize  
 - Dotenv  
 
-### Frontend  
-- React.js (Create React App)  
-- TailwindCSS  
-- Axios  
-- React Router  
+### **Frontend**
+- Next.js 16 (App Router)  
+- React 19  
+- TailwindCSS v4  
+- Fetch API / Axios  
+- Componentes reutilizables  
 
 ### DevOps / Control de Versiones  
 - GitFlow (`main`, `develop`)  
@@ -107,23 +118,39 @@ npm run dev
 node src/index.js
 
 #Frontend
-Entrar al frontend
-
+#Configurar el Frontend (Next.js)
 cd client
 
 #Instalar dependencias
 npm install
 
 #Ejecutar proyecto
-npm start
+npm run dev
 
-#Endpoints Backend (pendiente de implementación)
-Método	Endpoint	       Descripción
-GET	/api/cocktails	       Listar cócteles
-GET	/api/cocktails/:id	   Ver detalle
-POST /api/cocktails	       Crear cóctel
-PUT	/api/cocktails/:id	   Editar cóctel
-DELETE /api/cocktails/:id  Desactivar cóctel 'soft delete'
+#Abrir manualmente en:
+http://localhost:3000
+
+# 📡 Endpoints Backend (Implementados)
+
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| GET | `/api/cocktails` | Listar cócteles (con búsqueda opcional `?search=`) |
+| GET | `/api/cocktails/:id` | Ver detalle de un cóctel |
+| POST | `/api/cocktails` | Crear cóctel (con imagen) |
+| PUT | `/api/cocktails/:id` | Editar cóctel (con imagen opcional) |
+| DELETE | `/api/cocktails/:id` | Desactivar cóctel (soft delete) |
+
+## Funcionalidades del Frontend
+
+✅ **Lista de cócteles** con búsqueda en tiempo real  
+✅ **Vista de detalle** con toda la información del cóctel  
+✅ **Formulario de creación** con validación y preview de imagen  
+✅ **Formulario de edición** integrado en la página de detalle  
+✅ **Sistema de favoritos** persistente con localStorage  
+✅ **Navegación global** con barra de navegación  
+✅ **Manejo de errores** y estados de carga  
+✅ **Imágenes optimizadas** con placeholder automático  
+✅ **Diseño responsive** con TailwindCSS
 
 #Flujo de Trabajo Git (GitFlow)
 Crear rama de desarrollo:
