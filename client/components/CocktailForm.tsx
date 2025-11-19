@@ -1,23 +1,27 @@
 "use client";
-
-import { useState } from "react";
-import { isValidImageFile } from "@/lib/utils";
+import { useState, useEffect } from "react";
+import { isValidImageFile, getImageUrl } from "@/lib/utils";
 
 interface CocktailFormProps {
     initialData?: {
         nombre?: string;
         descripcion?: string;
         precio?: number | string;
+        imagen_url?: string;
+        disponible?: boolean;
     };
     onSubmit: (formData: FormData) => Promise<void>;
     submitLabel?: string;
+    showAvailabilityField?: boolean;
 }
 
-export default function CocktailForm({ initialData = {}, onSubmit, submitLabel = "Guardar" }: CocktailFormProps) {
+// Componente de formulario reutilizable para crear y editar cócteles
+export default function CocktailForm({ initialData = {}, onSubmit, submitLabel = "Guardar", showAvailabilityField = false }: CocktailFormProps) {
     const [form, setForm] = useState({
         nombre: initialData.nombre || "",
         descripcion: initialData.descripcion || "",
         precio: initialData.precio || "",
+        disponible: initialData.disponible !== undefined ? initialData.disponible : true,
         imagen: null as File | null,
     });
 
@@ -25,6 +29,14 @@ export default function CocktailForm({ initialData = {}, onSubmit, submitLabel =
     const [error, setError] = useState<string | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
 
+    // Carga la imagen existente cuando hay datos iniciales
+    useEffect(() => {
+        if (initialData?.imagen_url) {
+            setImagePreview(getImageUrl(initialData.imagen_url));
+        }
+    }, [initialData?.imagen_url]);
+
+    // Maneja los cambios en los campos del formulario y valida imágenes
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         if (e.target instanceof HTMLInputElement && e.target.name === "imagen") {
             const file = e.target.files?.[0];
@@ -57,16 +69,19 @@ export default function CocktailForm({ initialData = {}, onSubmit, submitLabel =
         setError(null);
     };
 
+    // Valida y envía el formulario al backend
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setError(null);
 
-        // Validación
         if (!form.nombre.trim()) {
             setError("El nombre es obligatorio");
             return;
         }
-
+        if (!form.descripcion.trim()) {
+            setError("La descripción es obligatoria");
+            return;
+        }
         if (!form.precio || parseFloat(form.precio.toString()) <= 0) {
             setError("El precio debe ser mayor a 0");
             return;
@@ -76,11 +91,13 @@ export default function CocktailForm({ initialData = {}, onSubmit, submitLabel =
         data.append("nombre", form.nombre.trim());
         data.append("descripcion", form.descripcion.trim());
         data.append("precio", form.precio.toString());
-
+        
+        if (showAvailabilityField) {
+            data.append("disponible", form.disponible.toString());
+        }
         if (form.imagen) {
             data.append("imagen", form.imagen);
         }
-
         try {
             setLoading(true);
             await onSubmit(data);
@@ -92,6 +109,7 @@ export default function CocktailForm({ initialData = {}, onSubmit, submitLabel =
         }
     };
 
+    // Renderiza el formulario con validación y preview de imagen
     return (
         <form className="space-y-4 bg-white p-6 rounded-lg shadow" onSubmit={handleSubmit}>
             {error && (
@@ -117,7 +135,7 @@ export default function CocktailForm({ initialData = {}, onSubmit, submitLabel =
 
             <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Descripción
+                    Descripción *
                 </label>
                 <textarea
                     name="descripcion"
@@ -125,6 +143,7 @@ export default function CocktailForm({ initialData = {}, onSubmit, submitLabel =
                     value={form.descripcion}
                     onChange={handleChange}
                     className="border border-gray-300 rounded-lg p-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[100px]"
+                    required
                     disabled={loading}
                 />
             </div>
@@ -147,10 +166,40 @@ export default function CocktailForm({ initialData = {}, onSubmit, submitLabel =
                 />
             </div>
 
+            {showAvailabilityField && (
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Estado
+                    </label>
+                    <select
+                        name="disponible"
+                        value={form.disponible ? 'true' : 'false'}
+                        onChange={(e) => setForm({ ...form, disponible: e.target.value === 'true' })}
+                        className="border border-gray-300 rounded-lg p-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        disabled={loading}
+                    >
+                        <option value="true">Disponible</option>
+                        <option value="false">No disponible</option>
+                    </select>
+                </div>
+            )}
+
             <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Imagen
+                    Imagen {initialData?.imagen_url && "(Opcional - dejar vacío para mantener la actual)"}
                 </label>
+                {imagePreview && (
+                    <div className="mb-3">
+                        <p className="text-sm text-gray-600 mb-2">
+                            {initialData?.imagen_url ? "Imagen actual:" : "Vista previa:"}
+                        </p>
+                        <img 
+                            src={imagePreview} 
+                            alt="Preview" 
+                            className="w-full max-w-xs h-48 object-cover rounded-lg border-2 border-gray-200"
+                        />
+                    </div>
+                )}
                 <input
                     name="imagen"
                     type="file"
@@ -159,16 +208,9 @@ export default function CocktailForm({ initialData = {}, onSubmit, submitLabel =
                     className="border border-gray-300 rounded-lg p-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                     disabled={loading}
                 />
-                {imagePreview && (
-                    <div className="mt-3">
-                        <p className="text-sm text-gray-600 mb-2">Vista previa:</p>
-                        <img 
-                            src={imagePreview} 
-                            alt="Preview" 
-                            className="w-full max-w-xs h-48 object-cover rounded-lg"
-                        />
-                    </div>
-                )}
+                <p className="text-xs text-gray-500 mt-1">
+                    Formatos: JPG, PNG, GIF, WEBP (máx. 5MB)
+                </p>
             </div>
 
             <button 

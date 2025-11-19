@@ -1,23 +1,18 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import { fetchCocktails } from "./api/cocktails";
 import CocktailCard from "@/components/CocktailCard";
+interface Cocktail { id_cocktail: number; nombre: string; descripcion?: string; precio: number; imagen_url?: string; disponible: boolean; }
 
-interface Cocktail {
-  id_cocktail: number;
-  nombre: string;
-  descripcion?: string;
-  precio: number;
-  imagen_url?: string;
-}
-
+// Página principal - Catálogo de cócteles con búsqueda y filtros
 export default function HomePage() {
   const [search, setSearch] = useState("");
   const [cocktails, setCocktails] = useState<Cocktail[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [filterStatus, setFilterStatus] = useState<'available' | 'unavailable' | 'all'>('available');
 
+  // Carga los cócteles desde el backend con búsqueda opcional
   const load = async () => {
     try {
       setLoading(true);
@@ -43,6 +38,7 @@ export default function HomePage() {
     load();
   }, [search]);
 
+  // Renderiza el catálogo con búsqueda, filtros y grid de tarjetas
   return (
     <div className="p-6">
       <div className="mb-6">
@@ -50,7 +46,7 @@ export default function HomePage() {
         <p className="text-gray-600">Explora nuestra colección de deliciosos cócteles</p>
       </div>
 
-      <div className="mb-6">
+      <div className="mb-6 space-y-4">
         <input
           type="text"
           placeholder="Buscar cócteles por nombre..."
@@ -58,6 +54,43 @@ export default function HomePage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
+        
+        {/* Filtro de disponibilidad */}
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-gray-600">Filtrar por:</span>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setFilterStatus('available')}
+              className={`px-3 py-1.5 rounded-md text-sm transition ${
+                filterStatus === 'available'
+                  ? 'bg-gray-800 text-white'
+                  : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-50'
+              }`}
+            >
+              Disponibles
+            </button>
+            <button
+              onClick={() => setFilterStatus('unavailable')}
+              className={`px-3 py-1.5 rounded-md text-sm transition ${
+                filterStatus === 'unavailable'
+                  ? 'bg-gray-800 text-white'
+                  : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-50'
+              }`}
+            >
+              No disponibles
+            </button>
+            <button
+              onClick={() => setFilterStatus('all')}
+              className={`px-3 py-1.5 rounded-md text-sm transition ${
+                filterStatus === 'all'
+                  ? 'bg-gray-800 text-white'
+                  : 'bg-white text-gray-600 border border-gray-300 hover:bg-gray-50'
+              }`}
+            >
+              Todos
+            </button>
+          </div>
+        </div>
       </div>
 
       {error && (
@@ -91,9 +124,15 @@ export default function HomePage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {cocktails.map((c) => (
-            <CocktailCard key={c.id_cocktail} cocktail={c} />
-          ))}
+          {cocktails
+            .filter(c => {
+              if (filterStatus === 'available') return c.disponible;
+              if (filterStatus === 'unavailable') return !c.disponible;
+              return true; // 'all'
+            })
+            .map((c) => (
+              <CocktailCard key={c.id_cocktail} cocktail={c} showAvailability={true} />
+            ))}
         </div>
       )}
     </div>

@@ -8,7 +8,9 @@ import './models/Cocktail.js';
 
 async function main() {
     try {
-        await sequelize.sync({ force: false });
+        // CAMBIAR A true PARA RESTABLECER LA BASE DE DATOS (ELIMINA TODOS LOS DATOS)
+        // Después de restablecer, volver a cambiar a false
+        await sequelize.sync({ force: true });
 
         const port = process.env.PORT || 4000;
         app.listen(port, () => {

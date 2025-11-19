@@ -22,6 +22,7 @@ class CocktailService {
     // Crear un nuevo cóctel
     async create(data) {
         if (!data.nombre) throw new Error("El campo 'nombre' es obligatorio");
+        if (!data.descripcion) throw new Error("El campo 'descripción' es obligatorio");
         if (!data.precio) throw new Error("El campo 'precio' es obligatorio");
 
         const payload = {

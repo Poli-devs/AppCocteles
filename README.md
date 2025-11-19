@@ -7,7 +7,7 @@ Se aplica también un flujo profesional de Git con ramas `main` y `develop`.
 
 ---
 
-## 🎯 Objetivo del Proyecto
+## Objetivo del Proyecto
 
 Construir una aplicación completa para manejar cócteles, incluyendo:
 
@@ -32,44 +32,52 @@ Construir una aplicación completa para manejar cócteles, incluyendo:
 
 ---
 
-##  Estructura del Proyecto
+## Estructura del Proyecto
+
+```
 AppCocteles/
 │
-
-├── server/ # Backend (Node.js + Express + PostgreSQL)
-│ ├── src/
-│ │ ├── models/
-│ │ ├── middlewares/
-│ │ ├── controllers/
-│ │ ├── services/
-│ │ ├── routes/
-│ │ ├── database/
-│ │ ├── app.js
-│ │ └── index.js
-│ └── uploads
-│ └── package.json
+├── server/                          # Backend (Node.js + Express + PostgreSQL)
+│   ├── src/
+│   │   ├── models/                  # Modelos de datos (Sequelize)
+│   │   ├── middlewares/             # Middleware de subida de imágenes
+│   │   ├── controllers/             # Controladores de la API
+│   │   ├── routes/                  # Rutas de la API REST
+│   │   ├── database/                # Configuración de base de datos
+│   │   ├── app.js                   # Configuración de Express
+│   │   └── index.js                 # Punto de entrada del servidor
+│   ├── uploads/                     # Carpeta de imágenes subidas
+│   ├── package.json
+│   └── .env                         # Variables de entorno
 │
-
-└── client/                # Frontend Next.js + TailwindCSS
-  ├── app/
-  │ ├── layout.js
-  │ ├── page.jsx
-  │ ├── cocktails/
-  │ │ ├── page.jsx
-  │ │ └── [id]/page.jsx
-  │ ├── favoritos/page.jsx
-  │ └── agregar/page.jsx
-  ├── components/
-  │ ├── Navbar.jsx
-  │ ├── CocktailCard.jsx
-  │ └── SearchBar.jsx
-  ├── lib/
-  │ └── api.js
-  ├── public/
-  │ └── placeholder.jpg
-  ├── tailwind.config.js
-  ├── package.json
-  └── .env.local
+└── client/                          # Frontend (Next.js 15 + TailwindCSS)
+    ├── app/
+    │   ├── layout.tsx               # Layout principal con navegación
+    │   ├── page.tsx                 # Página principal (catálogo)
+    │   ├── globals.css              # Estilos globales
+    │   ├── api/                     # Funciones de API centralizadas
+    │   │   ├── index.js             # Configuración de URL base
+    │   │   ├── cocktails.js         # API de cócteles (CRUD)
+    │   │   └── favorites.js         # API de favoritos (localStorage)
+    │   ├── cocktails/
+    │   │   └── [id]/
+    │   │       └── page.tsx         # Detalle y edición de cóctel
+    │   ├── favoritos/
+    │   │   └── page.tsx             # Lista de favoritos
+    │   └── agregar/
+    │       └── page.tsx             # Formulario de creación
+    ├── components/
+    │   ├── Navbar.jsx               # Barra de navegación
+    │   ├── CocktailCard.tsx         # Tarjeta de cóctel
+    │   └── CocktailForm.tsx         # Formulario reutilizable
+    ├── lib/
+    │   └── utils.js                 # Funciones utilitarias
+    ├── public/
+    │   └── placeholder.jpg          # Imagen por defecto
+    ├── tailwind.config.js
+    ├── package.json
+    └── .env.local                   # Variables de entorno del cliente
+```
 ---
 
 #  Tecnologías Utilizadas
@@ -84,11 +92,13 @@ AppCocteles/
 - Dotenv  
 
 ### **Frontend**
-- Next.js 16 (App Router)  
+- Next.js 15 (App Router)  
 - React 19  
+- TypeScript  
 - TailwindCSS v4  
-- Fetch API / Axios  
+- Fetch API  
 - Componentes reutilizables  
+- localStorage para favoritos  
 
 ### DevOps / Control de Versiones  
 - GitFlow (`main`, `develop`)  
@@ -104,33 +114,60 @@ AppCocteles/
 git clone https://github.com/Poli-devs/AppCocteles.git
 cd AppCocteles
 
-# Backend
-Entrar al backend
+# Configurar la Base de Datos
+
+```bash
+# Crear la base de datos
+createdb AppCocktail
+
+# O desde psql:
+psql -U postgres
+CREATE DATABASE AppCocktail;
+\q
+```
+
+# Backend (Node.js v18)
+
+```bash
+# Entrar al backend
 cd server
 
-#Instalar dependencias
+# Usar Node.js v18
+nvm use 18
+
+# Instalar dependencias
 npm install
 
-#Ejecutar servidor
+# Configurar variables de entorno en server/.env:
+# DB_NAME=AppCocktail
+# DB_USER=postgres
+# DB_PASSWORD=tu_password
+
+# Ejecutar servidor (puerto 4000)
 npm run dev
+```
 
-#o 
-node src/index.js
+Backend corriendo en: `http://localhost:4000`
 
-#Frontend
-#Configurar el Frontend (Next.js)
+# Frontend (Node.js v20)
+
+```bash
+# Abrir nueva terminal
 cd client
 
-#Instalar dependencias
+# Usar Node.js v20
+nvm use 20
+
+# Instalar dependencias
 npm install
 
-#Ejecutar proyecto
+# Ejecutar proyecto (puerto 3000)
 npm run dev
+```
 
-#Abrir manualmente en:
-http://localhost:3000
+Frontend corriendo en: `http://localhost:3000`
 
-# 📡 Endpoints Backend (Implementados)
+# Endpoints Backend (Implementados)
 
 | Método | Endpoint | Descripción |
 |--------|----------|-------------|
@@ -142,32 +179,63 @@ http://localhost:3000
 
 ## Funcionalidades del Frontend
 
-✅ **Lista de cócteles** con búsqueda en tiempo real  
-✅ **Vista de detalle** con toda la información del cóctel  
-✅ **Formulario de creación** con validación y preview de imagen  
-✅ **Formulario de edición** integrado en la página de detalle  
-✅ **Sistema de favoritos** persistente con localStorage  
-✅ **Navegación global** con barra de navegación  
-✅ **Manejo de errores** y estados de carga  
-✅ **Imágenes optimizadas** con placeholder automático  
-✅ **Diseño responsive** con TailwindCSS
+### Página Principal (`/`)
+- **Catálogo completo** de cócteles con grid responsive
+- **Búsqueda en tiempo real** por nombre
+- **Filtros de disponibilidad** (Disponibles / No disponibles / Todos)
+- **Sistema de favoritos** con corazón interactivo
+- **Estados de carga** y manejo de errores
+- **Botón de reintentar** en caso de error
 
-#Flujo de Trabajo Git (GitFlow)
-Crear rama de desarrollo:
-git checkout -b develop
+### Detalle de Cóctel (`/cocktails/[id]`)
+- **Vista completa** del cóctel con imagen, precio y descripción
+- **Modal de edición** con formulario integrado
+- **Modal de confirmación** para eliminar
+- **Indicador de disponibilidad** visual
+- **Fechas de creación y actualización**
+- **Mensajes de éxito** con auto-ocultado
 
-#Subir cambios:
-git add .
-git commit -m "feat: descripción del cambio"
-git push origin develop
+### Agregar Cóctel (`/agregar`)
+- **Formulario completo** con validación
+- **Preview de imagen** antes de subir
+- **Validación de archivos** (tipo y tamaño máx. 5MB)
+- **Redirección automática** después de crear
+- **Mensaje de éxito** con feedback visual
 
-#Autor
+### Favoritos (`/favoritos`)
+- **Lista de cócteles favoritos** guardados en localStorage
+- **Persistencia de datos** entre sesiones
+- **Indicador de disponibilidad** en cada tarjeta
+- **Estado vacío** con mensaje y enlace al catálogo
+- **Sincronización automática** con el sistema de favoritos
 
-Luis Fernando
-Desarrollador de Software
-GitHub: https://github.com/Poli-devs
+### Componentes Reutilizables
+- **Navbar** - Navegación global con rutas activas
+- **CocktailCard** - Tarjeta de cóctel con favoritos
+- **CocktailForm** - Formulario para crear/editar
 
-#DATABASE :
+### Características Técnicas
+- **API centralizada** en `/app/api/` para todas las peticiones
+- **Funciones utilitarias** en `/lib/utils.js`
+- **TypeScript** para type safety
+- **Manejo de errores** robusto en todas las operaciones
+- **Imágenes optimizadas** con placeholder automático
+- **Diseño responsive** con TailwindCSS
+- **Comentarios en código** para facilitar mantenimiento
+
+## Páginas Disponibles
+
+| Ruta | Descripción |
+|------|-------------|
+| `/` | Catálogo principal con búsqueda y filtros |
+| `/cocktails/[id]` | Detalle, edición y eliminación de cóctel |
+| `/agregar` | Formulario para crear nuevo cóctel |
+| `/favoritos` | Lista de cócteles marcados como favoritos |
+
+
+##  Esquema de Base de Datos
+
+```sql
 -- database.sql
 CREATE TABLE cocktails (
     id_cocktail SERIAL PRIMARY KEY,
@@ -179,3 +247,32 @@ CREATE TABLE cocktails (
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
 );
+```
+
+## Características de Diseño
+
+- **Paleta de colores** profesional con azul como color principal
+- **Botones con estados** hover y disabled
+- **Modales con backdrop blur** para mejor UX
+- **Animaciones suaves** en transiciones
+- **Grid responsive** que se adapta a móvil, tablet y desktop
+- **Mensajes de feedback** claros para el usuario
+- **Iconos emoji** para mejor experiencia visual
+
+## Notas Importantes
+
+- El backend corre en el puerto **4000**
+- El frontend corre en el puerto **3000**
+- Las imágenes se guardan en `server/uploads/`
+- Los favoritos se guardan en `localStorage` del navegador
+- El sistema usa **soft delete** (no elimina físicamente los registros)
+- Todos los archivos tienen **comentarios explicativos** para facilitar el mantenimiento
+
+## Autor
+
+**Luis Fernando**  
+Desarrollador de Software  
+GitHub: https://github.com/Poli-devs
+
+---
+

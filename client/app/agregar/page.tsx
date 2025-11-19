@@ -1,14 +1,15 @@
 "use client";
-
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import CocktailForm from "@/components/CocktailForm";
 import { createCocktail } from "@/app/api/cocktails";
 
+// Página para agregar un nuevo cóctel al catálogo
 export default function AddCocktailPage() {
     const router = useRouter();
     const [success, setSuccess] = useState(false);
 
+    // Envía el formulario al backend y redirige al catálogo
     const handleSubmit = async (formData: FormData) => {
         try {
             const res = await createCocktail(formData);
@@ -29,6 +30,7 @@ export default function AddCocktailPage() {
         }
     };
 
+    // Renderiza el formulario de creación con mensaje de éxito
     return (
         <main className="p-6 max-w-2xl mx-auto">
             <div className="mb-6">
